@@ -1,0 +1,3 @@
+# Von Composer verwaltete Fremdpakete - nie eingecheckt, jederzeit per
+# "composer install" aus der composer.lock wiederherstellbar.
+/vendor/

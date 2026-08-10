@@ -1,0 +1,33 @@
+# =====================================================================
+#  Betriebs-Zusammenstellung für Kapitel 68.
+#  Zwei Dienste: der FPM-Anwendungscontainer (app) und ein Reverse-Proxy
+#  davor (web). Nur der Proxy ist nach außen veröffentlicht; FPM bleibt
+#  im internen Netz.
+# =====================================================================
+services:
+  app:
+    build: .
+    image: grundstein-kap68:1.0.0
+    environment:
+      APP_ENV: prod
+      APP_VERSION: "1.0.0"
+      # Geheimnisse kommen aus der Umgebung des Betriebs (Kapitel 57),
+      # nie aus dem Image. Der Wert wird erst beim Start eingesetzt.
+      DB_DSN: "${DB_DSN}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+    # Kein Port nach außen - nur der Reverse-Proxy spricht mit FPM.
+    expose:
+      - "9000"
+    restart: unless-stopped
+
+  web:
+    # Platzhalter für einen gängigen Webserver als Reverse-Proxy.
+    image: reverse-proxy:stable
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+    volumes:
+      # Der genaue Zielpfad hängt vom gewählten Webserver ab.
+      - ./webserver.conf:/etc/webserver/conf.d/default.conf:ro
+    restart: unless-stopped

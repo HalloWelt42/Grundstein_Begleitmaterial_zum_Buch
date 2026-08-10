@@ -1,0 +1,6 @@
+# Nichts hiervon gehört ins Image. Vor allem keine Geheimnisse.
+.env
+.git
+vendor/
+tests/
+*.md

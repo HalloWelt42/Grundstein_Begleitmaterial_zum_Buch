@@ -1,0 +1,12 @@
+{
+    "name": "grundstein/kap69",
+    "description": "PHP 8.5 im Detail - Pipe-Operator, clone mit Eigenschaften, NoDiscard, URI-Erweiterung, array_first/array_last",
+    "type": "project",
+    "require": {
+        "php": ">=8.5",
+        "ext-uri": "*"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

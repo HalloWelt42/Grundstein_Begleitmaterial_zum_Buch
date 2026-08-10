@@ -1,0 +1,66 @@
+# Grundstein - Kapitel 51: Continuous Integration
+#
+# Diese Datei beschreibt die Prüfkette, die GitHub Actions bei jedem
+# Push und bei jedem Pull Request automatisch ausführt: Abhängigkeiten
+# installieren, Tests laufen lassen, statisch analysieren und den Stil
+# prüfen. Schlägt ein Schritt fehl, wird der ganze Lauf rot.
+
+name: CI
+
+# Wann die Prüfkette läuft: bei jedem Push auf main und bei jedem
+# Pull Request, der auf main zielt.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  pruefen:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Den Quelltext des Projekts auf den Rechner holen.
+      - name: Quelltext auschecken
+        uses: actions/checkout@v4
+
+      # 2. PHP 8.4 mit Composer einrichten. Die Code-Abdeckung brauchen
+      #    wir hier nicht, das spart Zeit.
+      - name: PHP einrichten
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+
+      # 3. Den Composer-Cache-Ordner ermitteln und als Ausgabe
+      #    festhalten, damit der nächste Schritt ihn kennt.
+      - name: Composer-Cache-Ordner ermitteln
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      # 4. Den Cache wiederherstellen. Der Schlüssel hängt an der
+      #    composer.lock: Ändert sie sich, wird neu geladen, sonst
+      #    kommen die Pakete aus dem Cache.
+      - name: Abhängigkeiten cachen
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      # 5. Die Abhängigkeiten installieren.
+      - name: Abhängigkeiten installieren
+        run: composer install --prefer-dist --no-progress
+
+      # 6. Erstes Tor: die Tests.
+      - name: Tests
+        run: vendor/bin/phpunit
+
+      # 7. Zweites Tor: die statische Analyse.
+      - name: Statische Analyse
+        run: vendor/bin/phpstan analyse --no-progress
+
+      # 8. Drittes Tor: die Stil-Prüfung.
+      - name: Stil-Prüfung
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff

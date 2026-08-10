@@ -1,0 +1,21 @@
+{
+    "name": "grundstein/kap48",
+    "description": "Test-Doubles - Dummy, Stub, Fake, Spy und Mock",
+    "type": "project",
+    "require": {
+        "php": ">=8.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    }
+}

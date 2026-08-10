@@ -1,0 +1,37 @@
+{
+    "name": "grundstein/warenkorb",
+    "description": "Kleiner Warenkorb als Composer-Beispiel für Grundstein.",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.4",
+        "ramsey/uuid": "^4.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "start": "php index.php",
+        "test": "phpunit",
+        "pruefe": [
+            "@test",
+            "@start"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

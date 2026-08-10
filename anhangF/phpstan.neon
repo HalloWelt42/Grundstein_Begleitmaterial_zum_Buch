@@ -1,0 +1,12 @@
+# Statische Analyse mit PHPStan - Konfiguration.
+# Aufruf aus dem Projektwurzel-Verzeichnis: vendor/bin/phpstan analyse
+parameters:
+    # Prüfstufe: 0 (mild) bis 10; "max" ist die jeweils höchste.
+    level: max
+    # Welche Ordner und Dateien geprüft werden.
+    paths:
+        - src
+    # Ausnahmen vom Scan. Das (?) macht den Pfad optional,
+    # falls er nicht in jedem Projekt existiert.
+    excludePaths:
+        - src/generiert (?)

@@ -1,0 +1,9 @@
+# Abhängigkeiten werden per composer install regeneriert.
+/vendor/
+
+# Die echte Umgebungsdatei enthält Geheimnisse und wird NIE eingecheckt.
+# Eingecheckt wird nur .env.example mit Platzhaltern.
+/.env
+
+# PHPUnit-Zwischenstand.
+/.phpunit.result.cache
